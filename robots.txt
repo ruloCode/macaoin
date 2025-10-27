@@ -1,0 +1,15 @@
+# Macao Internacional - Robots.txt
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.macaoin.com/sitemap.xml
+
+# Crawl-delay for polite bots (optional)
+# Crawl-delay: 10
+
+# Disallow specific paths if needed in the future
+# Disallow: /private/
+# Disallow: /admin/
