@@ -297,6 +297,11 @@ body {
     margin-top: 16px;
 }
 
+/* Ocultar badge de experiencia en desktop */
+.experience-badge-mobile {
+    display: none;
+}
+
 /* Rating Section */
 .rating-section {
     display: flex;
@@ -558,38 +563,163 @@ body {
     }
 
     .hero {
-        padding-top: calc(var(--header-height) + 40px);
+        min-height: 100vh;
+        padding-top: var(--header-height);
+        padding-bottom: 40px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: linear-gradient(
+            rgba(31, 41, 55, 0.75),
+            rgba(31, 41, 55, 0.85)
+        ), url('images/hero/hero-main-image.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
     }
 
     .hero-title {
-        font-size: 42px;
+        font-size: 48px;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+        color: #FFFFFF;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .hero-subtitle {
-        font-size: 16px;
+        font-size: 17px;
+        line-height: 1.6;
+        color: #F3F4F6;
     }
 
     .hero-subtitle-secondary {
+        display: none;
+    }
+
+    /* Badge más grande y prominente */
+    .badge {
+        padding: 10px 20px;
         font-size: 15px;
+        font-weight: 700;
+        background: rgba(254, 226, 226, 0.95);
+        backdrop-filter: blur(10px);
+        margin-bottom: 24px;
     }
 
+    /* Reorganizar CTAs con jerarquía */
     .hero-actions {
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        gap: 12px;
+        margin-top: 12px;
     }
 
-    .btn {
-        text-align: center;
+    .btn-primary {
+        padding: 18px 32px;
+        font-size: 17px;
+        font-weight: 700;
+        animation: pulse 2s ease-in-out infinite;
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
     }
 
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+        }
+        50% {
+            box-shadow: 0 4px 24px rgba(239, 68, 68, 0.6);
+        }
+    }
+
+    .btn-secondary,
+    .btn-tertiary {
+        padding: 12px 24px;
+        font-size: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary:hover,
+    .btn-tertiary:hover {
+        background: rgba(255, 255, 255, 1);
+        border-color: var(--primary-red);
+    }
+
+    /* Tarjeta de prueba social unificada */
     .hero-stats {
-        flex-direction: column;
-        gap: 24px;
+        background: rgba(254, 226, 226, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(252, 165, 165, 0.6);
+        border-radius: 16px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
 
-    .image-placeholder {
-        width: 320px;
-        height: 300px;
+    .rating-section {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(252, 165, 165, 0.6);
+    }
+
+    .stars {
+        gap: 6px;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    .star {
+        font-size: 24px;
+    }
+
+    .rating-text {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--primary-red);
+    }
+
+    .customers-section {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        align-items: center;
+    }
+
+    /* Ocultar avatares en móvil */
+    .customers-section .avatars {
+        display: none;
+    }
+
+    .customers-count {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary-red);
+    }
+
+    .customers-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    /* Mostrar badge de experiencia en móvil */
+    .experience-badge-mobile {
+        display: flex;
+    }
+
+    /* Ocultar hero-right ya que ahora es background */
+    .hero-right {
+        display: none;
     }
 
     .card-top,
@@ -599,18 +729,48 @@ body {
 }
 
 @media (max-width: 480px) {
+    .hero {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .hero-title {
-        font-size: 36px;
+        font-size: 40px;
+        letter-spacing: -1.2px;
     }
 
-    .btn {
-        padding: 12px 24px;
-        font-size: 15px;
+    .hero-subtitle {
+        font-size: 16px;
+        line-height: 1.6;
     }
 
-    .speed-badge {
-        position: static;
-        margin-bottom: 20px;
+    .badge {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        font-size: 16px;
+        padding: 16px 28px;
+    }
+
+    .btn-secondary,
+    .btn-tertiary {
+        font-size: 14px;
+        padding: 11px 20px;
+    }
+
+    .hero-stats {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .star {
+        font-size: 22px;
+    }
+
+    .customers-count {
+        font-size: 24px;
     }
 }
 
