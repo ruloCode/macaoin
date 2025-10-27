@@ -242,25 +242,100 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ===== Scroll Animations =====
+// ===== Advanced Scroll Animations =====
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -100px 0px'
 };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('fade-in');
-            observer.unobserve(entry.target);
+            // Add staggered animation classes
+            setTimeout(() => {
+                entry.target.classList.add('animated');
+                
+                // Trigger counter animation for stat cards
+                if (entry.target.classList.contains('stat-card')) {
+                    animateCounter(entry.target);
+                }
+            }, index * 100);
+            
+            scrollObserver.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Observe elements for animation (uncomment if you want animations)
-// document.querySelectorAll('.product-card, .testimonial-card, .why-feature, .stat-card').forEach(el => {
-//     observer.observe(el);
-// });
+// Observe various elements for scroll animations
+document.addEventListener('DOMContentLoaded', () => {
+    // Add animate-on-scroll class to elements
+    const animateElements = document.querySelectorAll(
+        '.product-card, .testimonial-card, .why-feature, .stat-card, ' +
+        '.section-header, .section-header-center, .about-left, .about-right, ' +
+        '.contact-method, .form-group'
+    );
+    
+    animateElements.forEach((el, index) => {
+        el.classList.add('animate-on-scroll');
+        
+        // Add specific animation class based on element type
+        if (el.classList.contains('product-card')) {
+            el.style.animationDelay = `${index * 0.1}s`;
+        }
+        
+        scrollObserver.observe(el);
+    });
+});
+
+// ===== Counter Animation =====
+function animateCounter(element) {
+    const valueElement = element.querySelector('.stat-value, .customers-count');
+    if (!valueElement) return;
+    
+    const targetText = valueElement.textContent;
+    const targetNumber = parseInt(targetText.replace(/\D/g, ''));
+    const suffix = targetText.replace(/[0-9]/g, '');
+    
+    if (isNaN(targetNumber)) return;
+    
+    const duration = 2000; // 2 seconds
+    const steps = 60;
+    const increment = targetNumber / steps;
+    let current = 0;
+    let step = 0;
+    
+    const timer = setInterval(() => {
+        step++;
+        current = Math.min(Math.floor(increment * step), targetNumber);
+        valueElement.textContent = current + suffix;
+        
+        if (step >= steps) {
+            valueElement.textContent = targetText;
+            clearInterval(timer);
+        }
+    }, duration / steps);
+}
+
+// ===== Parallax Effect =====
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    
+    // Parallax for hero background
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        const heroBackground = hero.querySelector('.waves-background');
+        if (heroBackground) {
+            heroBackground.style.transform = `translateY(${scrolled * 0.3}px)`;
+        }
+    }
+    
+    // Parallax for floating cards
+    const floatingCards = document.querySelectorAll('.floating-card');
+    floatingCards.forEach((card, index) => {
+        const speed = 0.1 + (index * 0.05);
+        card.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+});
 
 // ===== Form Input Enhancements =====
 // Add floating label effect and validation feedback
@@ -310,11 +385,157 @@ gtag('js', new Date());
 gtag('config', 'GA_MEASUREMENT_ID');
 */
 
+// ===== 3D Tilt Effect for Cards =====
+function addTiltEffect() {
+    const tiltElements = document.querySelectorAll('.product-card, .testimonial-card, .stat-card');
+    
+    tiltElements.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+}
+
+// Initialize tilt effect after DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(addTiltEffect, 1000);
+});
+
+// ===== Magnetic Effect for Buttons =====
+function addMagneticEffect() {
+    const magneticButtons = document.querySelectorAll('.btn-primary, .whatsapp-float, .back-to-top');
+    
+    magneticButtons.forEach(button => {
+        button.addEventListener('mousemove', (e) => {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            button.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translate(0, 0)';
+        });
+    });
+}
+
+// Initialize magnetic effect
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(addMagneticEffect, 1000);
+});
+
+// ===== Smooth Reveal on Load =====
+window.addEventListener('load', () => {
+    document.body.style.opacity = '1';
+    
+    // Add entrance animation to hero elements
+    const heroElements = document.querySelectorAll('.hero-left > *');
+    heroElements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+
+// ===== Interactive Stars Rating =====
+const stars = document.querySelectorAll('.star');
+if (stars.length > 0) {
+    stars.forEach((star, index) => {
+        star.addEventListener('mouseenter', () => {
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.style.transform = 'scale(1.3) rotate(360deg)';
+                    s.style.transition = 'all 0.3s ease';
+                }
+            });
+        });
+        
+        star.addEventListener('mouseleave', () => {
+            stars.forEach(s => {
+                s.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    });
+}
+
+// ===== Cursor Trail Effect =====
+let cursorTrail = [];
+const trailLength = 10;
+
+document.addEventListener('mousemove', (e) => {
+    // Only on desktop
+    if (window.innerWidth < 768) return;
+    
+    cursorTrail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
+    
+    if (cursorTrail.length > trailLength) {
+        cursorTrail.shift();
+    }
+});
+
+// ===== Page Visibility API - Pause animations when tab is hidden =====
+document.addEventListener('visibilitychange', () => {
+    const cards = document.querySelectorAll('.floating-card, .product-card');
+    
+    if (document.hidden) {
+        cards.forEach(card => {
+            card.style.animationPlayState = 'paused';
+        });
+    } else {
+        cards.forEach(card => {
+            card.style.animationPlayState = 'running';
+        });
+    }
+});
+
+// ===== Easter Egg - Konami Code =====
+let konamiCode = [];
+const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+document.addEventListener('keydown', (e) => {
+    konamiCode.push(e.key);
+    
+    if (konamiCode.length > konamiSequence.length) {
+        konamiCode.shift();
+    }
+    
+    if (konamiCode.join(',') === konamiSequence.join(',')) {
+        // Easter egg activated!
+        document.body.style.animation = 'rainbow 3s linear infinite';
+        setTimeout(() => {
+            document.body.style.animation = '';
+        }, 3000);
+    }
+});
+
 // ===== Performance Monitoring =====
 if ('performance' in window) {
     window.addEventListener('load', () => {
         const perfData = window.performance.timing;
         const pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
         console.log(`⚡ Page loaded in ${pageLoadTime}ms`);
+        
+        // Log animation performance
+        if (pageLoadTime < 3000) {
+            console.log('✨ Animations: Optimal performance');
+        } else {
+            console.log('⚠️ Consider optimizing animations for better performance');
+        }
     });
 }
